@@ -15,15 +15,20 @@ class KaprodiController extends Controller
         return view('kaprodi.dosen.index', compact('dosen'));
     }
 
+   
     public function createDosen()
     {
         return view('kaprodi.dosen.create');
     }
 
+
     public function storeDosen(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,user_id|unique:dosen,user_id',
+            'id' => 'required|exists:users,id|unique:t_dosen,id',
+            'kelas_id' => 'required|exists:t_kelas,kelas_id',
+            'kode_dosen' => 'required|integer',
+            'nip' => 'required|integer',
             'nama' => 'required|string|max:100',
         ]);
 
@@ -32,14 +37,19 @@ class KaprodiController extends Controller
         return redirect()->route('kaprodi.dosen.index')->with('success', 'Dosen berhasil ditambahkan.');
     }
 
+
     public function editDosen(Dosen $dosen)
     {
         return view('kaprodi.dosen.edit', compact('dosen'));
     }
 
+
     public function updateDosen(Request $request, Dosen $dosen)
     {
         $request->validate([
+            'kelas_id' => 'required|exists:t_kelas,kelas_id',
+            'kode_dosen' => 'required|integer',
+            'nip' => 'required|integer',
             'nama' => 'required|string|max:100',
         ]);
 
@@ -69,7 +79,7 @@ class KaprodiController extends Controller
     public function storeKelas(Request $request)
     {
         $request->validate([
-            'nama_kelas' => 'required|string|max:100',
+            'nama' => 'required|string|max:50',
             'kapasitas' => 'required|integer|min:1',
         ]);
 
@@ -83,10 +93,11 @@ class KaprodiController extends Controller
         return view('kaprodi.kelas.edit', compact('kelas'));
     }
 
+
     public function updateKelas(Request $request, Kelas $kelas)
     {
         $request->validate([
-            'nama_kelas' => 'required|string|max:100',
+            'nama' => 'required|string|max:50',
             'kapasitas' => 'required|integer|min:1',
         ]);
 
@@ -102,18 +113,22 @@ class KaprodiController extends Controller
         return redirect()->route('kaprodi.kelas.index')->with('success', 'Kelas berhasil dihapus.');
     }
 
-    public function plotMahasiswaDosen(Request $request, Kelas $kelas)
+    public function showMahasiswa(Kelas $kelas)
+    {
+        $mahasiswa = $kelas->mahasiswa; 
+        return view('kaprodi.mahasiswa.index', compact('mahasiswa', 'kelas'));
+    }
+
+    public function addMahasiswaToKelas(Request $request, Kelas $kelas)
     {
         $request->validate([
-            'mahasiswa_ids' => 'array',
-            'dosen_ids' => 'array',
+            'mahasiswa_ids' => 'required|array',
+            'mahasiswa_ids.*' => 'exists:t_mahasiswa,mahasiswa_id',
         ]);
 
-        $kelas->mahasiswa()->sync($request->input('mahasiswa_ids', []));
+        $kelas->mahasiswa()->sync($request->mahasiswa_ids, false);
 
-        $kelas->dosen()->sync($request->input('dosen_ids', []));
-
-        return redirect()->route('kaprodi.kelas.index')->with('success', 'Mahasiswa dan dosen berhasil dipetakan ke kelas.');
+        return redirect()->route('kaprodi.showMahasiswa', $kelas->kelas_id)->with('success', 'Mahasiswa berhasil ditambahkan ke kelas.');
     }
 
 }
