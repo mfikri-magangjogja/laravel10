@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('t_dosen', function (Blueprint $table) {
             $table->id('dosen_id');
             $table->foreignId('id')->unique()->constrained('users', 'id');
+            $table->foreignId('kelas_id')->unique()->constrained('t_kelas', 'kelas_id');
+            $table->integer('kode_dosen');
+            $table->integer('nip');
             $table->string('nama', 100);
             $table->timestamps();
         });

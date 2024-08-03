@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('t_mahasiswa', function (Blueprint $table) {
             $table->id('mahasiswa_id');
             $table->foreignId('id')->unique()->constrained('users', 'id');
-            $table->string('nama', 100);
-            $table->foreignId('dosen_id')->unique()->constrained('t_dosen', 'dosen_id');
             $table->foreignId('kelas_id')->unique()->constrained('t_kelas', 'kelas_id');
+            $table->string('nama', 100);
+            $table->string('nim');
+            $table->string('tempat_lahir');
+            $table->date('tanggal_lahir');
+            $table->boolean('edit');
             $table->timestamps();
         });
     }

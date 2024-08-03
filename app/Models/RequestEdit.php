@@ -11,8 +11,7 @@ class RequestEdit extends Model
     protected $fillable = [
         'request_id',
         'mahasiswa_id',
-        'field_to_edit',
-        'new_value',
-        'dosen_wali_id'
+        'kelas_id',
+        'keterangan'
     ];
 }

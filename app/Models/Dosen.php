@@ -10,6 +10,10 @@ class Dosen extends Model
     use HasFactory;
     protected $fillable = [
         'dosen_id',
-        'user_id'
+        'id',
+        'kelas_id',
+        'kode_dosen',
+        'nip',
+        'nama'
     ];
 }

@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('t_request_edit', function (Blueprint $table) {
             $table->id('request_id');
             $table->foreignId('mahasiswa_id')->constrained('t_mahasiswa', 'mahasiswa_id');
-            $table->string('field_to_edit', 50);
-            $table->string('new_value', 255);
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->foreignId('dosen_wali_id')->constrained('t_dosen', 'dosen_id');
+            $table->foreignId('kelas_id')->unique()->constrained('t_kelas', 'kelas_id');
+            $table->string('keterangan', 50);
             $table->timestamps();
         });
     }
