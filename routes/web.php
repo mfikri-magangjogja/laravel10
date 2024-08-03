@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
 
 // Rute untuk dosen
 Route::prefix('kaprodi/dosen')->name('kaprodi.dosen.')->middleware('auth')->group(function () {
@@ -91,3 +94,6 @@ Route::prefix('kelas')->name('kelas.')->middleware('auth')->group(function () {
     Route::put('/{kelas}', [KelasController::class, 'update'])->name('update');
     Route::delete('/{kelas}', [KelasController::class, 'destroy'])->name('destroy');
 });
+
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

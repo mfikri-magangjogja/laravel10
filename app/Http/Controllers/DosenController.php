@@ -56,7 +56,7 @@ class DosenController extends Controller
          ]);
  
          $mahasiswa->update($request->all());
- 
+
          return redirect()->route('dosen.mahasiswa.index')->with('success', 'Mahasiswa berhasil diperbarui.');
      }
  
@@ -98,13 +98,11 @@ class DosenController extends Controller
  
          return redirect()->route('dosen.request_edit.index')->with('success', 'Permintaan edit berhasil disetujui.');
      }
- 
 
      public function rejectRequestEdit(RequestEdit $requestEdit)
      {
          $requestEdit->status = 'rejected';
          $requestEdit->save();
- 
          $requestEdit->delete();
  
          return redirect()->route('dosen.request_edit.index')->with('success', 'Permintaan edit berhasil ditolak.');
