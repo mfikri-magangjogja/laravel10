@@ -8,20 +8,19 @@ use Illuminate\Support\Facades\Auth;
 
 class MahasiswaController extends Controller
 {
-     // Menampilkan data mahasiswa yang sedang login
+ 
      public function show()
      {
          $mahasiswa = Auth::user()->mahasiswa;
          return view('mahasiswa.show', compact('mahasiswa'));
      }
  
-     // Menampilkan formulir untuk meminta perubahan data
+ 
      public function requestEdit()
      {
          return view('mahasiswa.request_edit');
      }
  
-     // Mengajukan permintaan edit data
      public function storeRequestEdit(Request $request)
      {
          $request->validate([

@@ -68,7 +68,7 @@ class DosenController extends Controller
          return redirect()->route('dosen.mahasiswa.index')->with('success', 'Mahasiswa berhasil dihapus.');
      }
  
-     // Menampilkan daftar permintaan edit data dari mahasiswa
+     
      public function indexRequestEdit()
      {
          $dosen = auth()->user()->dosen;
@@ -78,36 +78,33 @@ class DosenController extends Controller
          return view('dosen.request_edit.index', compact('requests'));
      }
  
-     // Menampilkan formulir untuk mengedit permintaan
+    
      public function editRequestEdit(RequestEdit $requestEdit)
      {
          return view('dosen.request_edit.edit', compact('requestEdit'));
      }
  
-     // Menyetujuinya permintaan edit
+     
      public function approveRequestEdit(RequestEdit $requestEdit)
      {
          $requestEdit->status = 'approved';
          $requestEdit->save();
- 
-         // Update data mahasiswa sesuai permintaan
+         
          $mahasiswa = Mahasiswa::find($requestEdit->mahasiswa_id);
          $mahasiswa->{$requestEdit->field_to_edit} = $requestEdit->new_value;
          $mahasiswa->save();
  
-         // Hapus permintaan setelah disetujui
          $requestEdit->delete();
  
          return redirect()->route('dosen.request_edit.index')->with('success', 'Permintaan edit berhasil disetujui.');
      }
  
-     // Menolak permintaan edit
+
      public function rejectRequestEdit(RequestEdit $requestEdit)
      {
          $requestEdit->status = 'rejected';
          $requestEdit->save();
  
-         // Hapus permintaan setelah ditolak
          $requestEdit->delete();
  
          return redirect()->route('dosen.request_edit.index')->with('success', 'Permintaan edit berhasil ditolak.');
