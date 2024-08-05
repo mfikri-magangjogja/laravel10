@@ -28,11 +28,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get(
-    '/dashboard',
-    [DashboardController::class, 'dashboard']
-);
-
 Route::get('/kaprodi', [KaprodiController::class, 'index'])->name('kaprodi.index')->middleware('useraccess:kaprodi');
 Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index')->middleware('useraccess:dosen');
 Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index')->middleware('useraccess:mahasiswa');

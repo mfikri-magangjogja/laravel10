@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Kaprodi extends Model
 {
     use HasFactory;
+    protected $table = 't_kaprodi';
+    protected $primarykey = 'kaprodi_id';
     protected $fillable = [
-        'kaprodi_id',
         'id',
         'kode_dosen',
         'nip',

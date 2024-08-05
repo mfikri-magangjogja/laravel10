@@ -3,16 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dosen;
+use App\Models\Kaprodi;
 use App\Models\Kelas;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 
 class KaprodiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dosen = Dosen::all();
-        return view('kaprodiindex', compact('dosen'));
+        $kaprodi_id = $request->kaprodi_id; 
+        $kaprodi = Kaprodi::find($kaprodi_id); 
+
+        if (!$kaprodi) {
+            return redirect()->back()->with('error', 'Kaprodi tidak ditemukan.');
+        }
+
+        return view('kaprodi.index', compact('kaprodi'));
+    }
+    public function editKaprodi(Kaprodi $kaprodi)
+    {
+        return view('kaprodi.edit');
+    }
+
+    public function updateKapordi(Request $request, Kaprodi $kaprodi)
+    {
+        $request->validate([
+            'kode_dosen' => 'required|integer',
+            'nip' => 'required|integer',
+            'nama' => 'required|string|max:100',
+        ]);
+
+        $kaprodi->update($request->all());
+
+        return redirect()->route('kaprodi.index')->with('success', 'Kaprodi berhasil diperbarui.');
+    }
+    public function indexdosen()
+    {
+        $dosen = dosen::all();
+        return view('kaprodiindex');
     }
 
     public function createDosen()
@@ -37,7 +66,7 @@ class KaprodiController extends Controller
 
     public function editDosen(Dosen $dosen)
     {
-        return view('kaprodi.dosen.edit', compact('dosen'));
+        return view('kaprodi.dosen.edit');
     }
 
     public function updateDosen(Request $request, Dosen $dosen)
@@ -108,7 +137,7 @@ class KaprodiController extends Controller
         return redirect()->route('kaprodi.kelas.index')->with('success', 'Kelas berhasil dihapus.');
     }
 
-    
+    // Ploting Mahasiswa dan Dosen ke dalam Kelas
     public function plotingIndex()
     {
         $kelas = Kelas::with(['mahasiswas', 'dosens'])->get();
@@ -122,6 +151,11 @@ class KaprodiController extends Controller
         $request->validate([
             'mahasiswa_id' => 'required|exists:t_mahasiswa,mahasiswa_id',
         ]);
+
+        // Check if class capacity is exceeded
+        if ($kelas->mahasiswas()->count() >= $kelas->kapasitas) {
+            return redirect()->route('kaprodi.ploting.index')->with('error', 'Kapasitas kelas sudah penuh.');
+        }
 
         $mahasiswa = Mahasiswa::find($request->mahasiswa_id);
         $mahasiswa->kelas_id = $kelas->kelas_id;
