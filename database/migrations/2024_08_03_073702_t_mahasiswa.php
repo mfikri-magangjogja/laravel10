@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('t_mahasiswa', function (Blueprint $table) {
             $table->id('mahasiswa_id');
             $table->foreignId('id')->unique()->constrained('users', 'id');
-            $table->foreignId('kelas_id')->unique()->constrained('t_kelas', 'kelas_id');
+            $table->foreignId('kelas_id')->nullable()->constrained('t_kelas', 'kelas_id')->onDelete('set null');
             $table->string('nama', 100);
             $table->string('nim');
             $table->string('tempat_lahir');

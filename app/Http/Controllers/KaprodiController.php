@@ -12,7 +12,7 @@ class KaprodiController extends Controller
     public function index()
     {
         $dosen = Dosen::all();
-        return view('kaprodiindex');
+        return view('kaprodiindex', compact('dosen'));
     }
 
     public function createDosen()
@@ -35,12 +35,10 @@ class KaprodiController extends Controller
         return redirect()->route('kaprodi.dosen.index')->with('success', 'Dosen berhasil ditambahkan.');
     }
 
-
     public function editDosen(Dosen $dosen)
     {
         return view('kaprodi.dosen.edit', compact('dosen'));
     }
-
 
     public function updateDosen(Request $request, Dosen $dosen)
     {
@@ -91,7 +89,6 @@ class KaprodiController extends Controller
         return view('kaprodi.kelas.edit', compact('kelas'));
     }
 
-
     public function updateKelas(Request $request, Kelas $kelas)
     {
         $request->validate([
@@ -111,22 +108,54 @@ class KaprodiController extends Controller
         return redirect()->route('kaprodi.kelas.index')->with('success', 'Kelas berhasil dihapus.');
     }
 
-    public function showMahasiswa(Kelas $kelas)
+    
+    public function plotingIndex()
     {
-        $mahasiswa = $kelas->mahasiswa; 
-        return view('kaprodi.mahasiswa.index', compact('mahasiswa', 'kelas'));
+        $kelas = Kelas::with(['mahasiswas', 'dosens'])->get();
+        $mahasiswas = Mahasiswa::all();
+        $dosens = Dosen::all();
+        return view('kaprodi.ploting.index', compact('kelas', 'mahasiswas', 'dosens'));
     }
 
-    public function addMahasiswaToKelas(Request $request, Kelas $kelas)
+    public function plotMahasiswa(Request $request, Kelas $kelas)
     {
         $request->validate([
-            'mahasiswa_ids' => 'required|array',
-            'mahasiswa_ids.*' => 'exists:t_mahasiswa,mahasiswa_id',
+            'mahasiswa_id' => 'required|exists:t_mahasiswa,mahasiswa_id',
         ]);
 
-        $kelas->mahasiswa()->sync($request->mahasiswa_ids, false);
+        $mahasiswa = Mahasiswa::find($request->mahasiswa_id);
+        $mahasiswa->kelas_id = $kelas->kelas_id;
+        $mahasiswa->save();
 
-        return redirect()->route('kaprodi.showMahasiswa', $kelas->kelas_id)->with('success', 'Mahasiswa berhasil ditambahkan ke kelas.');
+        return redirect()->route('kaprodi.ploting.index')->with('success', 'Mahasiswa berhasil dipotting ke kelas.');
     }
 
+    public function plotDosen(Request $request, Kelas $kelas)
+    {
+        $request->validate([
+            'dosen_id' => 'required|exists:t_dosen,dosen_id',
+        ]);
+
+        $dosen = Dosen::find($request->dosen_id);
+        $dosen->kelas_id = $kelas->kelas_id;
+        $dosen->save();
+
+        return redirect()->route('kaprodi.ploting.index')->with('success', 'Dosen berhasil dipotting ke kelas.');
+    }
+
+    public function unplotMahasiswa(Kelas $kelas, Mahasiswa $mahasiswa)
+    {
+        $mahasiswa->kelas_id = null;
+        $mahasiswa->save();
+
+        return redirect()->route('kaprodi.ploting.index')->with('success', 'Mahasiswa berhasil dihapus dari kelas.');
+    }
+
+    public function unplotDosen(Kelas $kelas, Dosen $dosen)
+    {
+        $dosen->kelas_id = null;
+        $dosen->save();
+
+        return redirect()->route('kaprodi.ploting.index')->with('success', 'Dosen berhasil dihapus dari kelas.');
+    }
 }
