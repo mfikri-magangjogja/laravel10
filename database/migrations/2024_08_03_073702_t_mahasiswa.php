@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('nim');
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
-            $table->boolean('edit');
+            $table->boolean('edit')->default(false);
             $table->timestamps();
         });
     }

@@ -9,18 +9,16 @@ use Illuminate\Http\Request;
 
 class KaprodiController extends Controller
 {
-    public function indexDosen()
+    public function index()
     {
         $dosen = Dosen::all();
-        return view('kaprodi.dosen.index', compact('dosen'));
+        return view('kaprodiindex');
     }
 
-   
     public function createDosen()
     {
         return view('kaprodi.dosen.create');
     }
-
 
     public function storeDosen(Request $request)
     {

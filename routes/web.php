@@ -1,10 +1,15 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\KaprodiController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\RequestEditController;
+use App\Http\Middleware\UserAccess;
+use App\Models\Dosen;
+use App\Models\Kaprodi;
+use App\Models\Mahasiswa;
 use App\Models\RequestEdit;
 use Illuminate\Support\Facades\Route;
 
@@ -22,9 +27,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+
+Route::get(
+    '/dashboard',
+    [DashboardController::class, 'dashboard']
+);
+
+Route::get('/kaprodi', [KaprodiController::class, 'index'])->name('kaprodi.index')->middleware('useraccess:kaprodi');
+Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index')->middleware('useraccess:dosen');
+Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index')->middleware('useraccess:mahasiswa');
 
 // Rute untuk dosen
 Route::prefix('kaprodi/dosen')->name('kaprodi.dosen.')->middleware('auth')->group(function () {
@@ -95,5 +106,7 @@ Route::prefix('kelas')->name('kelas.')->middleware('auth')->group(function () {
     Route::delete('/{kelas}', [KelasController::class, 'destroy'])->name('destroy');
 });
 
+
+Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class MahasiswaController extends Controller
 {
+    public function index()
+    {
+        return view('mahasiswaindex');
+    }
+
  
      public function show()
      {
