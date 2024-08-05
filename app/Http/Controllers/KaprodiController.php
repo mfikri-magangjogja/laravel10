@@ -12,14 +12,13 @@ class KaprodiController extends Controller
 {
     public function index(Request $request)
     {
-        $kaprodi_id = $request->kaprodi_id; 
-        $kaprodi = Kaprodi::find($kaprodi_id); 
+        // $id = $request->user_id; 
+        // $kaprodi = Kaprodi::find($id); 
+        // if (!$kaprodi) {
+        //      return redirect()->back()->with('error', 'Kaprodi tidak ditemukan.');
+        // }
 
-        if (!$kaprodi) {
-            return redirect()->back()->with('error', 'Kaprodi tidak ditemukan.');
-        }
-
-        return view('kaprodi.index', compact('kaprodi'));
+        return view('kaprodiindex');
     }
     public function editKaprodi(Kaprodi $kaprodi)
     {
