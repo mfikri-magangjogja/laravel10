@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('t_kaprodi', function (Blueprint $table) {
-            $table->id('kaprodi_id');
-            $table->foreignId('id')->unique()->constrained('users', 'id');
+            $table->id('id');
+            $table->foreignId('id_user')->unique()->constrained('users', 'id');
             $table->integer('kode_dosen');
             $table->integer('nip');
             $table->string('nama', 100);

@@ -9,9 +9,9 @@ class Kaprodi extends Model
 {
     use HasFactory;
     protected $table = 't_kaprodi';
-    protected $primarykey = 'kaprodi_id';
+    protected $primarykey = 'id';
     protected $fillable = [
-        'id',
+        'id_user',
         'kode_dosen',
         'nip',
         'nama',

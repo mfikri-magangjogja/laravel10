@@ -6,6 +6,7 @@ use App\Models\Dosen;
 use App\Models\Kaprodi;
 use App\Models\Kelas;
 use App\Models\Mahasiswa;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class KaprodiController extends Controller
@@ -37,104 +38,132 @@ class KaprodiController extends Controller
 
         return redirect()->route('kaprodi.index')->with('success', 'Kaprodi berhasil diperbarui.');
     }
+
+
+
+
+
+
+
     public function indexdosen()
     {
-        $dosen = dosen::all();
-        return view('kaprodiindex');
+        $dosen = dosen::get();
+        return view('kaprodidosenindex', compact('dosen'));
     }
+
 
     public function createDosen()
     {
-        return view('kaprodi.dosen.create');
+        $user = User::select('id')->where('role', 'dosen')->get();
+        return view('kaprodidosencreate', compact('user'));
     }
+
 
     public function storeDosen(Request $request)
     {
-        $request->validate([
-            'id' => 'required|exists:users,id|unique:t_dosen,id',
-            'kelas_id' => 'required|exists:t_kelas,kelas_id',
-            'kode_dosen' => 'required|integer',
-            'nip' => 'required|integer',
-            'nama' => 'required|string|max:100',
+
+        Dosen::create([
+            'id_user' => $request->input('id_user'),
+            'kode_dosen' => $request->input('kode_dosen'),
+            'nip' => $request->input('nip'),
+            'nama' => $request->input('nama'),
         ]);
 
-        Dosen::create($request->all());
 
-        return redirect()->route('kaprodi.dosen.index')->with('success', 'Dosen berhasil ditambahkan.');
+        return redirect()->route('kaprodi.dosen.index')->with('success', 'Dosen berhasil ditambah.');
     }
 
-    public function editDosen(Dosen $dosen)
+    public function editDosen($id)
     {
-        return view('kaprodi.dosen.edit');
+        $dosen = Dosen::findOrFail($id);
+        return view('kaprodidosenedit', compact('dosen'));
     }
 
-    public function updateDosen(Request $request, Dosen $dosen)
+
+
+    public function updateDosen(Request $request, $id)
+{
+    $request->validate([
+        'kode_dosen' => 'required|integer',
+        'nip' => 'required|integer',
+        'nama' => 'required|string|max:100',
+    ]);
+
+    $dosen = Dosen::findOrFail($id);
+    $dosen->update($request->all());
+
+    return redirect()->route('kaprodi.dosen.index')->with('success', 'Dosen berhasil diperbarui.');
+}
+
+
+    public function destroyDosen(Dosen $id)
     {
-        $request->validate([
-            'kelas_id' => 'required|exists:t_kelas,kelas_id',
-            'kode_dosen' => 'required|integer',
-            'nip' => 'required|integer',
-            'nama' => 'required|string|max:100',
-        ]);
-
-        $dosen->update($request->all());
-
-        return redirect()->route('kaprodi.dosen.index')->with('success', 'Dosen berhasil diperbarui.');
-    }
-
-    public function destroyDosen(Dosen $dosen)
-    {
+        $dosen = Dosen::findOrFail($id);
         $dosen->delete();
-
         return redirect()->route('kaprodi.dosen.index')->with('success', 'Dosen berhasil dihapus.');
     }
+
 
     public function indexKelas()
     {
         $kelas = Kelas::all();
-        return view('kaprodi.kelas.index', compact('kelas'));
+        return view('kaprodikelasindex', compact('kelas'));
     }
 
     public function createKelas()
     {
-        return view('kaprodi.kelas.create');
+        return view('kaprodikelascreate');
     }
 
     public function storeKelas(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:50',
-            'kapasitas' => 'required|integer|min:1',
+        Kelas::create([
+            'nama' => $request->input('nama'),
+            'kapasitas' => $request->input('kapasitas'),
+           
         ]);
-
-        Kelas::create($request->all());
 
         return redirect()->route('kaprodi.kelas.index')->with('success', 'Kelas berhasil ditambahkan.');
     }
 
-    public function editKelas(Kelas $kelas)
-    {
-        return view('kaprodi.kelas.edit', compact('kelas'));
-    }
+    public function editKelas($id)
+{
+    $kelas = Kelas::findOrFail($id);
+    return view('kaprodikelasedit', compact('kelas'));
+}
 
-    public function updateKelas(Request $request, Kelas $kelas)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:50',
-            'kapasitas' => 'required|integer|min:1',
-        ]);
+public function updateKelas(Request $request, $id)
+{
+    $kelas = Kelas::findOrFail($id);
 
-        $kelas->update($request->all());
+    $request->validate([
+        'nama' => 'required|string|max:50',
+        'kapasitas' => 'required|integer|min:1',
+    ]);
 
-        return redirect()->route('kaprodi.kelas.index')->with('success', 'Kelas berhasil diperbarui.');
-    }
+    $kelas->update($request->only(['nama', 'kapasitas']));
 
-    public function destroyKelas(Kelas $kelas)
-    {
-        $kelas->delete();
+    return redirect()->route('kaprodi.kelas.index')->with('success', 'Kelas berhasil diperbarui.');
+}
 
-        return redirect()->route('kaprodi.kelas.index')->with('success', 'Kelas berhasil dihapus.');
-    }
+public function destroyKelas($id)
+{
+    $kelas = Kelas::findOrFail($id);
+    $kelas->delete();
+
+    return redirect()->route('kaprodi.kelas.index')->with('success', 'Kelas berhasil dihapus.');
+}
+
+
+
+
+
+
+
+
+
+
+
 
     // Ploting Mahasiswa dan Dosen ke dalam Kelas
     public function plotingIndex()

@@ -38,9 +38,15 @@
                         @if (auth()->check())
                             @if (auth()->user()->role == 'kaprodi')
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('kaprodi.index') }}">
+                                    <a class="nav-link" href="{{ route('kaprodi.dosen.index') }}">
                                         <span data-feather="file" class="align-text-bottom"></span>
-                                        Kaprodi
+                                        Dosen
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('kaprodi.kelas.index') }}">
+                                        <span data-feather="file" class="align-text-bottom"></span>
+                                        Kelas
                                     </a>
                                 </li>
                             @elseif (auth()->user()->role == 'dosen')

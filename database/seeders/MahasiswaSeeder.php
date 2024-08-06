@@ -45,7 +45,7 @@ class MahasiswaSeeder extends Seeder
             $kelas_id = $kelas[$kelasIndex]->kelas_id; // Determine class ID
 
             Mahasiswa::create([
-                'id' => $mahasiswaUser->id,
+                'id_user' => $mahasiswaUser->id,
                 'kelas_id' => $kelas_id,
                 'nama' => $mahasiswaUser->name,
                 'nim' => $faker->unique()->numberBetween(100000000, 999999999),

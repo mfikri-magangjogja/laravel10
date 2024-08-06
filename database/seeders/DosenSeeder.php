@@ -37,7 +37,7 @@ class DosenSeeder extends Seeder
             $kelas_id = ($index < 2) ? $kelas[$index]->kelas_id : null;
 
             Dosen::updateOrCreate(
-                ['id' => $dosenUser->id], // Memastikan tidak ada duplikasi berdasarkan id
+                ['id_user' => $dosenUser->id], // Memastikan tidak ada duplikasi berdasarkan id
                 [
                     'kelas_id' => $kelas_id,
                     'kode_dosen' => $faker->unique()->numberBetween(1000, 9999),

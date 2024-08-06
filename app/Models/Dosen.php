@@ -9,9 +9,9 @@ class Dosen extends Model
 {
     use HasFactory;
     protected $table = 't_dosen';
-    protected $primarykey = 'dosen_id';
+    protected $primarykey = 'id';
     protected $fillable = [
-        'id',
+        'id_user',
         'kelas_id',
         'kode_dosen',
         'nip',

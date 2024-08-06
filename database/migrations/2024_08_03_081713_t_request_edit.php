@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('t_request_edit', function (Blueprint $table) {
-            $table->id('request_id');
-            $table->foreignId('mahasiswa_id')->constrained('t_mahasiswa', 'mahasiswa_id');
-            $table->foreignId('kelas_id')->unique()->constrained('t_kelas', 'kelas_id');
+            $table->id('id');
+            $table->foreignId('mahasiswa_id')->constrained('t_mahasiswa', 'id');
+            $table->foreignId('kelas_id')->unique()->constrained('t_kelas', 'id');
             $table->string('keterangan', 50);
             $table->timestamps();
         });

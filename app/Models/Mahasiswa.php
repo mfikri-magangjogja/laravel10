@@ -9,9 +9,9 @@ class Mahasiswa extends Model
 {
     use HasFactory;
     protected $table = 't_mahasiswa';
-    protected $primarykey = 'mahasiswa_id';
+    protected $primarykey = 'id';
     protected $fillable = [
-        'id',
+        'id_user',
         'kelas_id',
         'nama',
         'nim',

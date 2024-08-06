@@ -20,7 +20,7 @@ class KaprodiSeeder extends Seeder
         // Memastikan ada pengguna dengan peran 'kaprodi'
         if ($kaprodiUser) {
             Kaprodi::create([
-                'id' => $kaprodiUser->id,
+                'id_user' => $kaprodiUser->id,
                 'kode_dosen' => $faker->unique()->numberBetween(1000, 9999),
                 'nip' => $faker->unique()->numberBetween(100000000, 999999999),
                 'nama' => $kaprodiUser->name,
